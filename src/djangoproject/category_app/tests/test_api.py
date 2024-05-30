@@ -1,37 +1,48 @@
-from rest_framework.test import APITestCase
+import pytest
+from djangoproject.category_app.repository import DjangoORMCategoryRepository
+from rest_framework.test import APIClient
 
 from src.core.category.domain.Category import Category
-from djangoproject.category_app.repository import DjangoORMCategoryRepository
+
+
 # Create your tests here.
 
 
-class TestCategoryAPI(APITestCase):
-    def test_list_categories(self):
-        url = "/api/categories/"
+@pytest.mark.django_db
+class TestCategoryAPI():
 
-        movie_category = Category(
+    @pytest.fixture
+    def movie_category(self) -> Category:
+        return Category(
             name="Movies",
             description="Category for movies"
         )
 
-        series_category = Category(
-            name="Series",
-            description="Category for series"
+    @pytest.fixture
+    def series_category(self) -> Category:
+        return Category(
+            name="Movies",
+            description="Category for movies"
         )
 
-        repository = DjangoORMCategoryRepository()
+    @pytest.fixture
+    def repository(self) -> DjangoORMCategoryRepository:
+        return DjangoORMCategoryRepository()
+
+    def test_list_categories(self, movie_category, series_category, repository):
+        url = "/api/categories/"
+
         repository.save(movie_category)
         repository.save(series_category)
 
-        response = self.client.get(url)
+        response = APIClient().get(url)
 
-        self.assertEqual(response.status_code, 200)
-        print(response.data)
-        self.assertEqual(response.data, [
+        assert response.status_code == 200
+        assert response.data == [
             {
                 "id": str(category.id),
                 "name": category.name,
                 "description": category.description,
                 "is_active": category.is_active
             } for category in [movie_category, series_category]
-        ])
+        ]
