@@ -1,6 +1,6 @@
 import pytest
 
-from src.core.category.application.category_repository import CategoryRepository
+from src.core.category.domain.category_repository import CategoryRepository
 from src.core.category.application.delete_category import DeleteCategory, DeleteCategoryRequest
 from src.core.category.application.exceptions import CategoryNotFound
 from src.core.category.domain.Category import Category
