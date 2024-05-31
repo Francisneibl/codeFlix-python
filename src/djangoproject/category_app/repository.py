@@ -19,7 +19,7 @@ class DjangoORMCategoryRepository(CategoryRepository):
 
     def get_by_id(self, id: UUID) -> Category | None:
         try:
-            category = self.category_model.objects.get(id)
+            category = self.category_model.objects.get(id=id)
             return Category(
                 name=category.name,
                 description=category.description,
