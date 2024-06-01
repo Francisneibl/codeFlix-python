@@ -14,7 +14,7 @@ class CategoryOutput:
     id: UUID
     name: str
     description: str | None
-    is_activate: bool
+    is_active: bool
 
 
 @dataclass
@@ -35,6 +35,6 @@ class ListCategories:
                     id=category.id,
                     name=category.name,
                     description=category.description,
-                    is_activate=category.is_active
+                    is_active=category.is_active
                 ) for category in categories]
         )

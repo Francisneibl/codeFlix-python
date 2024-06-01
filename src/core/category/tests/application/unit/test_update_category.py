@@ -49,7 +49,7 @@ class TestUpdateCategory:
         mock_repository.get_by_id.return_value = category
 
         use_case = UpdateCategory(mock_repository)
-        use_case.execute(UpdateCategoryRequest(id=category.id, is_activate=False))
+        use_case.execute(UpdateCategoryRequest(id=category.id, is_active=False))
 
         assert category.is_active is False
         mock_repository.update.assert_called_once_with(category)
@@ -65,7 +65,7 @@ class TestUpdateCategory:
         mock_repository.get_by_id.return_value = category
 
         use_case = UpdateCategory(mock_repository)
-        use_case.execute(UpdateCategoryRequest(id=category.id, is_activate=True))
+        use_case.execute(UpdateCategoryRequest(id=category.id, is_active=True))
 
         assert category.is_active is True
         mock_repository.update.assert_called_once_with(category)

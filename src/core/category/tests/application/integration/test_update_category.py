@@ -65,7 +65,7 @@ class TestUpdateCategory:
         use_case = UpdateCategory(repository)
         use_case.execute(UpdateCategoryRequest(
             id=category.id,
-            name="Series", is_activate=False
+            name="Series", is_active=False
         ))
 
         edited_category = repository.get_by_id(category.id)
@@ -86,7 +86,7 @@ class TestUpdateCategory:
 
         use_case = UpdateCategory(repository)
         with pytest.raises(CategoryNotFound, match=f"not found category with id = {nonexistent_id}"):
-            use_case.execute(UpdateCategoryRequest(id=nonexistent_id, is_activate=True))
+            use_case.execute(UpdateCategoryRequest(id=nonexistent_id, is_active=True))
 
     def test_raise_exception_on_update_category_with_invalid_name(self):
         category = Category(

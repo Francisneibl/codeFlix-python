@@ -37,13 +37,13 @@ class TestListCategories:
                 name=movie_category.name,
                 description=movie_category.description,
                 id=movie_category.id,
-                is_activate=movie_category.is_active
+                is_active=movie_category.is_active
             ),
             CategoryOutput(
                 name=series_category.name,
                 description=series_category.description,
                 id=series_category.id,
-                is_activate=series_category.is_active
+                is_active=series_category.is_active
             )
         ])
         repository.list.assert_called()
