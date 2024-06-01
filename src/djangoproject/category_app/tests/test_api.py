@@ -151,3 +151,28 @@ class TestUpdateCategory:
         })
 
         assert response.status_code == 204
+
+
+@pytest.mark.django_db
+class TestDeleteCategory:
+    def test_when_id_is_invalid_then_return_400(self):
+        url = "/api/categories/1234/"
+        response = APIClient().delete(url)
+
+        assert response.status_code == 400
+
+    def test_when_category_does_exist_then_return_204(self, movie_category, repository):
+        repository.save(movie_category)
+
+        url = f"/api/categories/{movie_category.id}/"
+        response = APIClient().delete(url)
+
+        assert response.status_code == 204
+        assert len(repository.list()) == 0
+        assert repository.get_by_id(id=movie_category.id) is None
+
+    def test_when_category_does_not_exist_then_return_404(self):
+        url = f"/api/categories/{uuid4()}/"
+        response = APIClient().delete(url)
+
+        assert response.status_code == 404
