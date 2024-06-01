@@ -106,3 +106,48 @@ class TestCreateCategory:
 
         assert response.status_code == 201
         assert repository.get_by_id(created_category_id).id is not None
+
+
+@pytest.mark.django_db
+class TestUpdateCategory:
+    def test_when_receive_invalid_data_return_400(self):
+        url = f"/api/categories/12345/"
+        response = APIClient().put(url, data={
+            "name": "",
+
+        })
+
+        assert response.status_code == 400
+        assert response.data == {
+            "id": ["Must be a valid UUID."],
+            "name": ["This field may not be blank."],
+            "description": ["This field is required."],
+            "is_active": ["This field is required."]
+        }
+
+    def test_when_not_found_category_return_404(self):
+        url = f"/api/categories/{uuid4()}/"
+        response = APIClient().put(url, data={
+            "name": "Test",
+            "description": "description test",
+            "is_active": False
+
+        })
+
+        assert response.status_code == 404
+
+    def test_when_receive_valid_data_then_update_category_and_return_204(
+            self,
+            movie_category: Category,
+            repository: DjangoORMCategoryRepository
+    ):
+        repository.save(movie_category)
+
+        url = f"/api/categories/{movie_category.id}/"
+        response = APIClient().put(url, data={
+            "name": "Name edited",
+            "description": "Description edited",
+            "is_active": False
+        })
+
+        assert response.status_code == 204

@@ -1,9 +1,9 @@
 from rest_framework import serializers
-from uuid import uuid4
+
 
 class CategorySerializer(serializers.Serializer):
     id = serializers.UUIDField(required=False)
-    name = serializers.CharField(max_length=255)
+    name = serializers.CharField(max_length=255, allow_blank=False)
     description = serializers.CharField()
     is_active = serializers.BooleanField(default=True)
 
@@ -26,3 +26,9 @@ class CreateCategoryRequestSerializer(CategorySerializer):
 
 class CreateCategoryResponseSerializer(serializers.Serializer):
     id = serializers.UUIDField()
+
+
+class UpdateCategoryRequestSerializer(CategorySerializer):
+    id = serializers.UUIDField()
+    is_active = serializers.BooleanField()
+

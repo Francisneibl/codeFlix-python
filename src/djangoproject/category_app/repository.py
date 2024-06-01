@@ -43,3 +43,10 @@ class DjangoORMCategoryRepository(CategoryRepository):
 
     def delete(self, id: UUID) -> None:
         self.category_model.objects.filter(id=id).delete()
+
+    def update(self, category: Category):
+        category = self.category_model.objects.filter(id=category.id).update(
+            name=category.name,
+            description=category.description,
+            is_active=category.is_active
+        )
