@@ -1,7 +1,7 @@
 from uuid import uuid4
 
 import pytest
-from djangoproject.category_app.repository import DjangoORMCategoryRepository
+from ..repository import DjangoORMCategoryRepository
 from rest_framework.test import APIClient
 
 from src.core.category.domain.Category import Category
