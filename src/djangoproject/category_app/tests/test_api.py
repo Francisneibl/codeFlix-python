@@ -1,4 +1,4 @@
-from uuid import uuid4
+from uuid import uuid4, UUID
 
 import pytest
 from rest_framework.test import APIClient
@@ -85,3 +85,24 @@ class TestRetrieveCategory:
         response = APIClient().get(url)
 
         assert response.status_code == 404
+
+
+@pytest.mark.django_db
+class TestCreateCategory:
+    def test_when_receive_invalid_data_return_400(self):
+        url = '/api/categories/'
+        response = APIClient().post(url, data={"description": "description for category"})
+
+        assert response.status_code == 400
+
+        response = APIClient().post(url, data={"name": "a" * 300, "description": "description for category"})
+
+        assert response.status_code == 400
+
+    def test_when_receive_valid_data_return_201_and_id(self, repository: DjangoORMCategoryRepository):
+        url = '/api/categories/'
+        response = APIClient().post(url, data={"name": "Created category", "description": "description for category"})
+        created_category_id = UUID(response.data["id"])
+
+        assert response.status_code == 201
+        assert repository.get_by_id(created_category_id).id is not None
