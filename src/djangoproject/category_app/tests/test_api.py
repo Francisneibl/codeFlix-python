@@ -1,10 +1,10 @@
 from uuid import uuid4
 
 import pytest
-from ..repository import DjangoORMCategoryRepository
 from rest_framework.test import APIClient
 
 from src.core.category.domain.Category import Category
+from ..repository import DjangoORMCategoryRepository
 
 
 @pytest.fixture
@@ -18,8 +18,8 @@ def movie_category() -> Category:
 @pytest.fixture
 def series_category() -> Category:
     return Category(
-        name="Movies",
-        description="Category for movies"
+        name="Series",
+        description="Category for series"
     )
 
 
@@ -40,14 +40,15 @@ class TestListCategory:
         response = APIClient().get(url)
 
         assert response.status_code == 200
-        assert response.data == [
-            {
-                "id": str(category.id),
-                "name": category.name,
-                "description": category.description,
-                "is_active": category.is_active
-            } for category in [movie_category, series_category]
-        ]
+        assert response.data == {
+            "data": [
+                {
+                    "id": str(category.id),
+                    "name": category.name,
+                    "description": category.description,
+                    "is_active": category.is_active
+                } for category in [movie_category, series_category]
+            ]}
 
 
 @pytest.mark.django_db
@@ -60,7 +61,6 @@ class TestRetrieveCategory:
         assert response.status_code == 400
 
     def test_retrieve_category_by_id(self, movie_category, series_category, repository):
-
         repository.save(movie_category)
         repository.save(series_category)
 
@@ -70,10 +70,13 @@ class TestRetrieveCategory:
 
         assert response.status_code == 200
         assert response.data == {
-            "id": str(series_category.id),
-            "name": series_category.name,
-            "description": series_category.description,
-            "is_active": series_category.is_active
+            "data":
+                {
+                    "id": str(series_category.id),
+                    "name": series_category.name,
+                    "description": series_category.description,
+                    "is_active": series_category.is_active
+                }
         }
 
     def test_return_404_status_when_not_round_category(self):
